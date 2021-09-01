@@ -86,12 +86,12 @@ async def main(sprinter):
         await client.send_key(Keycode.W)
         for i in range(30):
             await client.send_key(Keycode.SPACEBAR)
-        await asyncio.sleep(1)
+        await asyncio.sleep(1.5)
         for button in creation_buttons:
             print(f' Clicking on {button}')
             await client.mouse_handler.click_window_with_name(button)
             await client.send_key(Keycode.SPACEBAR)
-            await asyncio.sleep(2)
+            await asyncio.sleep(2.5)
         print(f"Leaving and rejoining to skip tutorial")
         await asyncio.sleep(1)
         os.system("taskkill /f /im  WizardGraphicalClient.exe")
@@ -402,7 +402,7 @@ async def level_5(client):
         await asyncio.sleep(3)
         await client.send_key(Keycode.UP_ARROW, 1.3)
         await asyncio.sleep(0.3)
-        await client.send_key(Keycode.X, 0.4)
+        await client.send_key(Keycode.X, 0.6)
         await go_through_dialog(client)
         await asyncio.sleep(0.3)
         await client.send_key(Keycode.S, 2)
