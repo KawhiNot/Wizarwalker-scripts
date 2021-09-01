@@ -1,8 +1,6 @@
 import os
 import asyncio
 from types import TracebackType
-import win32con
-import win32gui
 from typing import *
 
 from wizwalker import ClientHandler, client_handler
