@@ -83,7 +83,7 @@ async def go_through_dialog(client):
         await client.send_key(Keycode.SPACEBAR, 0.1)
 
 
-async def main(sprinter,client):
+async def main(sprinter):
     for account in accounts:
         username, password = account.split(':')
         
@@ -378,7 +378,7 @@ async def run():
     sprinter = WizSprinter()
 
     try:
-        await main(sprinter,client)
+        await main(sprinter)
     except:
         import traceback
 
