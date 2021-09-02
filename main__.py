@@ -2,7 +2,7 @@ import os
 import asyncio
 from typing import *
 
-from wizwalker import ClientHandler, client
+from wizwalker import ClientHandler
 from wizwalker.constants import Keycode
 from wizwalker.extensions.wizsprinter import SprintyCombat, CombatConfigProvider, WizSprinter
 from wizwalker.memory import memory_objects
