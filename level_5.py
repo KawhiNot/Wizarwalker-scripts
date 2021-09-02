@@ -98,7 +98,6 @@ async def main(sprinter):
     for account in accounts:
         username, password = account.split(':')
         client = await launch_wiz(sprinter,username,password)
-        print (client)
 
         print ("Starting character creation")
         await client.send_key(Keycode.W)
