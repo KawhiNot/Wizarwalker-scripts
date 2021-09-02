@@ -6,7 +6,6 @@ from wizwalker import ClientHandler
 from wizwalker.constants import Keycode
 from wizwalker.extensions.wizsprinter import SprintyCombat, CombatConfigProvider, WizSprinter
 from wizwalker.memory import memory_objects
-from wizwalker.memory.handler import HookHandler
 from wizwalker import XYZ
 from wizwalker.memory.memory_objects.client_object import DynamicClientObject
 
