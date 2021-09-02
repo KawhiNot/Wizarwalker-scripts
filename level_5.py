@@ -114,7 +114,6 @@ async def main(sprinter):
         os.system("taskkill /f /im  WizardGraphicalClient.exe")
                
         client = await launch_wiz(sprinter,username,password)
-        print (client)
 
         await asyncio.sleep(3)
         await client.send_key(Keycode.W)
