@@ -1,21 +1,14 @@
 import os
 import asyncio
-from types import TracebackType
 from typing import *
 
-from wizwalker import ClientHandler, client_handler
-from wizwalker import utils
+from wizwalker import ClientHandler, client
 from wizwalker.constants import Keycode
 from wizwalker.extensions.wizsprinter import SprintyCombat, CombatConfigProvider, WizSprinter
-import wizwalker.client
 from wizwalker.memory import memory_objects
 from wizwalker.memory.handler import HookHandler
-import wizwalker.memory.memory_objects
-from wizwalker.utils import get_foreground_window
-from wizwalker.memory.hooks import SimpleHook, User32GetClassInfoBaseHook
 from wizwalker import XYZ
-from wizwalker.memory.memory_objects import quest_position
-from wizwalker.memory import DynamicClientObject
+from wizwalker.memory.memory_objects.client_object import DynamicClientObject
 
 
 with open('accounts.txt') as fileVar:
@@ -34,10 +27,10 @@ creation_buttons = [
     'btnPlay'
 ]
 
+
 async def set_completed(account):
     with open("completed.txt", "a") as file:
         file.write(account + "\n")
-        return
 
 async def go_to_closest_mob(self, excluded_ids: Set[int] = None) -> bool:
     return await go_to_closest_of(self,await self.get_mobs(excluded_ids), False)
@@ -49,12 +42,39 @@ async def go_to_closest_of(self, entities: List[DynamicClientObject], only_safe:
         return True
     return False
 
-async def are_in_battle(client):
-  for client in client:
-    if not await client.in_battle():
-      return False
-  return True
+async def battleship(client):
+        print("Combat Initiated")
+        combat_handlers = []
+        #Setting up the parsed configs to combat_handlers
+        combat_handlers.append(SprintyCombat(client, CombatConfigProvider("configs/spellconfig.txt", cast_time=0.5 )))
+        await asyncio.gather(*[h.wait_for_combat() for h in combat_handlers]) # .wait_for_combat() to wait for combat to then go through the battles
+        print ("Combat ended")
+        await client.send_key(Keycode.D, 0.3)
+        await asyncio.sleep(6.5)
+        print ("Starting Second Battle")
+        await go_to_closest_mob(client)
+        # Battle:
+        print ("Combat Initiated")
+        combat_handlers = []
+        # Setting up the parsed configs to combat_handlers
+        combat_handlers.append(SprintyCombat(client, CombatConfigProvider("configs/spellconfig.txt", cast_time=0.5 )))
+        await asyncio.gather(*[h.wait_for_combat() for h in combat_handlers]) # .wait_for_combat() to wait for combat to then go through the battles
+        print ("Combat ended")
+        await asyncio.sleep(0.4)
 
+async def bone_cages(client):
+        await asyncio.sleep(1)
+        await client.teleport(await client.quest_position.position())
+        await asyncio.sleep(1.5)
+        await client.send_key(Keycode.D, 0.1)
+        await asyncio.sleep(0.5)
+        await client.send_key(Keycode.X, 0.6)
+        await asyncio.sleep(0.5)
+        await client.teleport(await client.quest_position.position())
+        await asyncio.sleep(1.5)
+        await client.send_key(Keycode.D, 0.1)
+        await asyncio.sleep(1.5)
+        await client.send_key(Keycode.X, 0.6)
 
 async def go_through_dialog(client):
     while not await client.is_in_dialog():
@@ -63,38 +83,11 @@ async def go_through_dialog(client):
         await client.send_key(Keycode.SPACEBAR, 0.1)
 
 
-async def main(sprinter):
+async def main(sprinter,client):
     for account in accounts:
         username, password = account.split(':')
-
-        print(f"Launching Wizard101")
-        ClientHandler.start_wiz_client()
-        while len(clients := sprinter.get_new_clients()) == 0:
-            await asyncio.sleep(1)
-        client = clients[0]
-        client.login(username, password)
-
-        print(f"Activating Some Hooks")
-        await client.hook_handler.activate_root_window_hook()
-        await client.hook_handler.activate_render_context_hook()
-        await client.mouse_handler.activate_mouseless()
-        client.title = f"Level5Bot"
         
-        print(f"Starting character creation")
-        await client.send_key(Keycode.W)
-        for i in range(30):
-            await client.send_key(Keycode.SPACEBAR)
-        await asyncio.sleep(1)
-        for button in creation_buttons:
-            print(f' Clicking on {button}')
-            await client.mouse_handler.click_window_with_name(button)
-            await client.send_key(Keycode.SPACEBAR)
-            await asyncio.sleep(2)
-        print(f"Leaving and rejoining to skip tutorial")
-        await asyncio.sleep(1)
-        os.system("taskkill /f /im  WizardGraphicalClient.exe")
-               
-        print(f"Launching Wizard101")
+        print ("Launching Wizard101")
         ClientHandler.start_wiz_client()
         while len(clients := sprinter.get_new_clients()) == 0:
             await asyncio.sleep(0.5)
@@ -102,11 +95,40 @@ async def main(sprinter):
         client.login(username, password)
 
 
-        print(f"Activating Some Hooks")
+        print ("Activating Some Hooks")
         await client.hook_handler.activate_root_window_hook()
         await client.hook_handler.activate_render_context_hook()
         await client.mouse_handler.activate_mouseless()
-        client.title = f"Level5Bot"
+        client.title = "Level5Bot"
+
+        print ("Starting character creation")
+        await client.send_key(Keycode.W)
+        for i in range(30):
+            await client.send_key(Keycode.SPACEBAR)
+        await asyncio.sleep(1)
+        for button in creation_buttons:
+            print (f"Clicking on {button}")
+            await client.mouse_handler.click_window_with_name(button)
+            await client.send_key(Keycode.SPACEBAR)
+            await asyncio.sleep(2)
+        print ("Leaving and rejoining to skip tutorial")
+        await asyncio.sleep(2.5)
+        os.system("taskkill /f /im  WizardGraphicalClient.exe")
+               
+        print ("Launching Wizard101")
+        ClientHandler.start_wiz_client()
+        while len(clients := sprinter.get_new_clients()) == 0:
+            await asyncio.sleep(0.5)
+        client = clients[0]
+        client.login(username, password)
+
+
+        print ("Activating Some Hooks")
+        await client.hook_handler.activate_root_window_hook()
+        await client.hook_handler.activate_render_context_hook()
+        await client.mouse_handler.activate_mouseless()
+        client.title = "Level5Bot"
+
         await asyncio.sleep(3)
         await client.send_key(Keycode.W)
         await asyncio.sleep(3)
@@ -154,25 +176,8 @@ async def level_2(client):
         await client.teleport(await client.quest_position.position())
         await asyncio.sleep(1.5)
         await go_to_closest_mob(client)
-        # Battle:
-        print("Combat Initiated")
-        combat_handlers = []
-        # Setting up the parsed configs to combat_handlers
-        combat_handlers.append(SprintyCombat(client, CombatConfigProvider(f'configs/{client.title}spellconfig.txt', cast_time=0.5 )))
-        await asyncio.gather(*[h.wait_for_combat() for h in combat_handlers]) # .wait_for_combat() to wait for combat to then go through the battles
-        print("Combat ended")
-        await client.send_key(Keycode.D, 0.3)
-        await asyncio.sleep(6.5)
-        print ("Starting Second Battle")
-        await go_to_closest_mob(client)
-        # Battle:
-        print("Combat Initiated")
-        combat_handlers = []
-        # Setting up the parsed configs to combat_handlers
-        combat_handlers.append(SprintyCombat(client, CombatConfigProvider(f'configs/{client.title}spellconfig.txt', cast_time=0.5 )))
-        await asyncio.gather(*[h.wait_for_combat() for h in combat_handlers]) # .wait_for_combat() to wait for combat to then go through the battles
-        print("Combat ended")
-        await asyncio.sleep(0.4)
+        await asyncio.sleep(1)
+        await battleship(client)
         print ("Talking To The Lost Souls")
         await go_through_dialog(client)
         await asyncio.sleep(0.4)
@@ -200,29 +205,12 @@ async def level_3(client):
         await asyncio.sleep(1.5)
         await client.teleport(await client.quest_position.position())
         await asyncio.sleep(2)
-        print ("Teleporting To Skeletal Pirate")
+        print ("Teleporting To Skeletal Pirates")
         await client.teleport(await client.quest_position.position())
         await asyncio.sleep(1.5)
         await go_to_closest_mob(client)
-        # Battle:
-        print("Combat Initiated")
-        combat_handlers = []
-        #Setting up the parsed configs to combat_handlers
-        combat_handlers.append(SprintyCombat(client, CombatConfigProvider(f'configs/{client.title}spellconfig.txt', cast_time=0.5 )))
-        await asyncio.gather(*[h.wait_for_combat() for h in combat_handlers]) # .wait_for_combat() to wait for combat to then go through the battles
-        print("Combat ended")
-        await client.send_key(Keycode.D, 0.3)
-        await asyncio.sleep(6.5)
-        print ("Starting Second Battle")
-        await go_to_closest_mob(client)
-        # Battle:
-        print("Combat Initiated")
-        combat_handlers = []
-        # Setting up the parsed configs to combat_handlers
-        combat_handlers.append(SprintyCombat(client, CombatConfigProvider(f'configs/{client.title}spellconfig.txt', cast_time=0.5 )))
-        await asyncio.gather(*[h.wait_for_combat() for h in combat_handlers]) # .wait_for_combat() to wait for combat to then go through the battles
-        print("Combat ended")
-        await asyncio.sleep(0.4)
+        await asyncio.sleep(1)
+        await battleship(client)
         print ("Talking To Skeletal Pirates")
         await asyncio.sleep(0.4)
         await go_through_dialog(client)
@@ -265,55 +253,20 @@ async def level_4(client):
         await client.teleport(XYZ(588.1171875, -3368.130859375, 162.33975219726562))
         await asyncio.sleep(5)
         print ("Teleporting To Bone Cages")
-        await asyncio.sleep(1)
-        await client.teleport(await client.quest_position.position())
-        await asyncio.sleep(1.5)
-        await client.send_key(Keycode.D, 0.1)
-        await asyncio.sleep(0.5)
-        await client.send_key(Keycode.X, 0.6)
-        await asyncio.sleep(0.5)
-        await client.teleport(await client.quest_position.position())
-        await asyncio.sleep(1.5)
-        await client.send_key(Keycode.D, 0.1)
-        await asyncio.sleep(1.5)
-        await client.send_key(Keycode.X, 0.6)
+        await bone_cages(client)
         await asyncio.sleep(3)
         print ("Teleporting To Dark Fairies")
         await client.teleport(await client.quest_position.position())
         await asyncio.sleep(2)
         await go_to_closest_mob(client)
-        # Battle:
-        print("Combat Initiated")
-        combat_handlers = []
-        # Setting up the parsed configs to combat_handlers
-        combat_handlers.append(SprintyCombat(client, CombatConfigProvider(f'configs/{client.title}spellconfig.txt', cast_time=0.5 )))
-        await asyncio.gather(*[h.wait_for_combat() for h in combat_handlers]) # .wait_for_combat() to wait for combat to then go through the battles
-        print("Combat ended")
-        await client.send_key(Keycode.D, 0.3)
-        await asyncio.sleep(6.5)
-        print ("Starting Second Battle")
-        await go_to_closest_mob(client)
-        # Battle:
-        print("Combat Initiated")
-        combat_handlers = []
-        # Setting up the parsed configs to combat_handlers
-        combat_handlers.append(SprintyCombat(client, CombatConfigProvider(f'configs/{client.title}spellconfig.txt', cast_time=0.5 )))
-        await asyncio.gather(*[h.wait_for_combat() for h in combat_handlers]) # .wait_for_combat() to wait for combat to then go through the battles
-        print("Combat ended")
-        await asyncio.sleep(0.4)
+        await asyncio.sleep(1)
+        await battleship(client)
         print ("Talking To Dark Fairies")
         await go_through_dialog(client)
         await asyncio.sleep(3)
         print ("Opening The Other Two Bone Cages")
-        await client.teleport(await client.quest_position.position())
-        await client.send_key(Keycode.D, 0.1)
-        await asyncio.sleep(0.5)
-        await client.send_key(Keycode.X, 0.6)
+        await bone_cages(client)
         await asyncio.sleep(1)
-        await client.teleport(await client.quest_position.position())
-        await client.send_key(Keycode.D, 0.1)
-        await asyncio.sleep(0.5)
-        await client.send_key(Keycode.X, 0.6)
         print ("Teleporting To Lady Oriel")
         await asyncio.sleep(1.5)
         await client.teleport(XYZ(-29550, 19501, 162))
@@ -372,7 +325,7 @@ async def level_5(client):
         print("Combat Initiated")
         combat_handlers = []
         # Setting up the parsed configs to combat_handlers
-        combat_handlers.append(SprintyCombat(client, CombatConfigProvider(f'configs/{client.title}spellconfig.txt', cast_time=0.5 )))
+        combat_handlers.append(SprintyCombat(client, CombatConfigProvider('configs/spellconfig.txt', cast_time=0.5 )))
         await asyncio.gather(*[h.wait_for_combat() for h in combat_handlers]) # .wait_for_combat() to wait for combat to then go through the battles
         print("Combat ended")
         await asyncio.sleep(0.5)
@@ -420,36 +373,12 @@ async def level_5(client):
         print ("Level 5 Done!")
 
 
-
-        
-
-
-
-    
-
-
-
-
-        
-
-
-    
-        
-
-            
-
-
-
-        
-
-
-
 # Error Handling
 async def run():
     sprinter = WizSprinter()
 
     try:
-        await main(sprinter)
+        await main(sprinter,client)
     except:
         import traceback
 
