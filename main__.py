@@ -11,7 +11,7 @@ from wizwalker import XYZ
 from wizwalker.memory.memory_objects.client_object import DynamicClientObject
 
 
-with open('accounts.txt') as fileVar:
+with open("accounts.txt") as fileVar:
     accounts = fileVar.read().splitlines()
 
 creation_buttons = [
