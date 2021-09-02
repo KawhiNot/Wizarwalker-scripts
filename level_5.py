@@ -336,7 +336,7 @@ async def level_5(client):
         await asyncio.sleep(0.3)
         await client.send_key(Keycode.A, 0.2)
         await asyncio.sleep(3)
-        await client.send_key(Keycode.UP_ARROW, 1.5)
+        await client.send_key(Keycode.UP_ARROW, 1.7)
         await asyncio.sleep(0.3)
         await client.send_key(Keycode.X, 0.2)
         await go_through_dialog(client)
