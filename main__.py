@@ -87,7 +87,7 @@ async def main(sprinter):
         username, password = account.split(':')
         
         print ("Launching Wizard101")
-        ClientHandler.start_wiz_client()
+        sprinter.start_wiz_client()
         while len(clients := sprinter.get_new_clients()) == 0:
             await asyncio.sleep(0.5)
         client = clients[0]
@@ -115,7 +115,7 @@ async def main(sprinter):
         os.system("taskkill /f /im  WizardGraphicalClient.exe")
                
         print ("Launching Wizard101")
-        ClientHandler.start_wiz_client()
+        sprinter.start_wiz_client()
         while len(clients := sprinter.get_new_clients()) == 0:
             await asyncio.sleep(0.5)
         client = clients[0]
