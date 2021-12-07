@@ -14,7 +14,7 @@ creation_buttons = [
     'SkipButton',
     'SkipButton',
     'SkipButton',
-    'SelectIceButton',
+    'SelectLifeButton',
     'OKButton',
     'NextButton',
     'NextButton',
