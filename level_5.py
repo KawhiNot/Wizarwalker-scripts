@@ -57,7 +57,7 @@ async def battleship(client):
         print("Combat Initiated")
         combat_handlers = []
         #Setting up the parsed configs to combat_handlers
-        combat_handlers.append(SprintyCombat(client, CombatConfigProvider("configs/spellconfig.txt", cast_time=0.5 )))
+        combat_handlers.append(SprintyCombat(client, CombatConfigProvider("configs/Level5Botspellconfig.txt", cast_time=0.5 )))
         await asyncio.gather(*[h.wait_for_combat() for h in combat_handlers]) # .wait_for_combat() to wait for combat to then go through the battles
         print ("Combat ended")
         await client.send_key(Keycode.D, 0.3)
@@ -68,7 +68,7 @@ async def battleship(client):
         print ("Combat Initiated")
         combat_handlers = []
         # Setting up the parsed configs to combat_handlers
-        combat_handlers.append(SprintyCombat(client, CombatConfigProvider("configs/spellconfig.txt", cast_time=0.5 )))
+        combat_handlers.append(SprintyCombat(client, CombatConfigProvider("configs/Level5Botspellconfig.txt", cast_time=0.5 )))
         await asyncio.gather(*[h.wait_for_combat() for h in combat_handlers]) # .wait_for_combat() to wait for combat to then go through the battles
         print ("Combat ended")
         await asyncio.sleep(0.4)
@@ -311,7 +311,7 @@ async def level_5(client):
         print("Combat Initiated")
         combat_handlers = []
         # Setting up the parsed configs to combat_handlers
-        combat_handlers.append(SprintyCombat(client, CombatConfigProvider('configs/spellconfig.txt', cast_time=0.5 )))
+        combat_handlers.append(SprintyCombat(client, CombatConfigProvider('configs/Level5Botspellconfig.txt', cast_time=0.5 )))
         await asyncio.gather(*[h.wait_for_combat() for h in combat_handlers]) # .wait_for_combat() to wait for combat to then go through the battles
         print("Combat ended")
         await asyncio.sleep(0.5)
