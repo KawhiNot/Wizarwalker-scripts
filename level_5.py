@@ -100,6 +100,7 @@ async def main(sprinter):
         client = await launch_wiz(sprinter,username,password)
 
         print ("Starting character creation")
+        await asyncio.sleep(3)
         await client.send_key(Keycode.W)
         for i in range(30):
             await client.send_key(Keycode.SPACEBAR)
