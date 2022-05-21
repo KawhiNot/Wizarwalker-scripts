@@ -1,3 +1,0 @@
-imp @ enemy | frost @ enemy | dark @ enemy | blood @ enemy | fire @ enemy | thunder @ enemy | scarab @ enemy
-imp @ enemy | frost @ enemy | dark @ enemy | blood @ enemy | fire @ enemy | thunder @ enemy | scarab @ enemy
-imp @ enemy | frost @ enemy | dark @ enemy | blood @ enemy | fire @ enemy | thunder @ enemy | scarab @ enemy
