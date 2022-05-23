@@ -6,5 +6,3 @@ You need to put all your accounts in the accounts.txt file(format: username:pass
 Also make sure to create your accounts with this link: https://www.wizard101.com/home2/game/page_8ad6a4041a53806e011a54a998d7002c as the bot will work with that link only.
 
 Check out the wizwalker github https://github.com/StarrFox/wizwalker
-
-Made a command centre bot that farms synthonium in The Heap in Lemuria, have p1 at the sigil and start the script, the rest of the clients will port in.
